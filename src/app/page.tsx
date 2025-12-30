@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { useId } from "react";
 import { Trash2 } from "lucide-react"
 import NavBar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase"
@@ -123,36 +122,54 @@ export default function Home() {
         <NavBar user={user} onGetStarted={handleGetStarted} onSignOut={handleSignOut} />
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-medium leading-10 mb-4 tracking-tight text-black dark:text-black">
-            Hello, Rares
+            Hello, {user ? user.user_metadata.full_name : "Guest"}!
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
-            Here are your habits:
-          </p>
-          <ul className="flex flex-col gap-2">
-            {habits.map((habit) => (
-              <li className="flex items-center justify-between gap-10" key={habit.id}>
-                <div className="flex items-center gap-3">
-                  <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
-                  <div onClick={() => {
-                      setEditingHabitId(habit.id)
-                      setEditingText(habit.name)
-                    }
-                  }>
-                    <input onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                          saveEdit(habit.id)
+          {habits.length === 0 ? (
+            user ? (
+              <div>
+                <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
+                  You have no habits yet. Start adding a new habit below!
+                </p>
+              </div>
+            ) : (
+              <div>
+                <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
+                  You have no habits yet. Please press 'Get Started' and start adding a new habit below!
+                </p>
+              </div>
+            )
+          ) : (
+            <div>
+              <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
+                Here are your habits:
+              </p>
+              <ul className="flex flex-col gap-2">
+                {habits.map((habit) => (
+                  <li className="flex items-center justify-between gap-10" key={habit.id}>
+                    <div className="flex items-center gap-3">
+                      <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
+                      <div onClick={() => {
+                          setEditingHabitId(habit.id)
+                          setEditingText(habit.name)
                         }
-                      }}
-                    className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}/>
-                    <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
-                      {habit.name} is {habit.done ? "done" : "undone"}
-                    </span>
-                  </div>
-                </div>
-                <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
-              </li>
-            ))}
-          </ul>
+                      }>
+                        <input onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                              saveEdit(habit.id)
+                            }
+                          }}
+                        className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}/>
+                        <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
+                          {habit.name} is {habit.done ? "done" : "undone"}
+                        </span>
+                      </div>
+                    </div>
+                    <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <br></br>
 
