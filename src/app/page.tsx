@@ -99,6 +99,11 @@ export default function Home() {
   }
 
   async function saveEdit(id: string) {
+    if (editingText.trim() === "") { // Handle case when the input is empty, therefore the empty habit name will not be saved
+      setEditingHabitId(null)
+      return
+    }
+
     const { error } = await supabase
       .from('habits')
       .update({ name: editingText })
@@ -153,7 +158,7 @@ export default function Home() {
                           setEditingText(habit.name)
                         }
                       }>
-                        <input onKeyDown={(e) => {
+                        <input onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
                           if (e.key === "Enter") {
                               saveEdit(habit.id)
                             }
