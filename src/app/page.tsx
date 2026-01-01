@@ -123,7 +123,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-[#E6E8E6]">
-      <main className="flex min-h-screen w-full max-w-5xl flex-col items-center justify-start gap-26 py-22 px-16 bg-white dark:bg-[#E6E8E6] sm:items-start">
+      <main className="flex min-h-screen w-full  flex-col items-center justify-start gap-26 py-22 px-35 bg-white dark:bg-[#E6E8E6] sm:items-start">
         <NavBar user={user} onGetStarted={handleGetStarted} onSignOut={handleSignOut} />
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-medium leading-10 mb-4 tracking-tight text-black dark:text-black">
@@ -148,7 +148,7 @@ export default function Home() {
               <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
                 Here are your habits:
               </p>
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-2 mt-2">
                 {habits.map((habit) => (
                   <li className="flex items-center justify-between gap-10" key={habit.id}>
                     <div className="flex items-center gap-3">
@@ -165,7 +165,7 @@ export default function Home() {
                           }}
                         className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}/>
                         <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
-                          {habit.name} is {habit.done ? "done" : "undone"}
+                          {habit.name}
                         </span>
                       </div>
                     </div>
