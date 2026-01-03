@@ -5,6 +5,7 @@ import { Trash2 } from "lucide-react"
 import NavBar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase"
 import { User } from "@supabase/supabase-js"
+import HabitProgressChart from "@/components/HabitProgressChart";
 
 export default function Home() {
   type Habit = {
@@ -123,68 +124,71 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-[#E6E8E6]">
-      <main className="flex min-h-screen w-full  flex-col items-center justify-start gap-26 py-22 px-35 bg-white dark:bg-[#E6E8E6] sm:items-start">
+      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-26 py-22 px-35 bg-white dark:bg-[#E6E8E6] sm:items-start">
         <NavBar user={user} onGetStarted={handleGetStarted} onSignOut={handleSignOut} />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-medium leading-10 mb-4 tracking-tight text-black dark:text-black">
-            Hello, {user ? user.user_metadata.full_name : "Guest"}!
-          </h1>
-          {habits.length === 0 ? (
-            user ? (
-              <div>
-                <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
-                  You have no habits yet. Start adding a new habit below!
-                </p>
-              </div>
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+            <h1 className="max-w-xs text-3xl font-medium leading-10 mb-4 tracking-tight text-black dark:text-black">
+              Hello, {user ? user.user_metadata.full_name : "Guest"}!
+            </h1>
+            {habits.length === 0 ? (
+              user ? (
+                <div>
+                  <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
+                    You have no habits yet. Start adding a new habit below!
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
+                    You have no habits yet. Please press 'Get Started' and start adding a new habit below!
+                  </p>
+                </div>
+              )
             ) : (
               <div>
-                <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
-                  You have no habits yet. Please press 'Get Started' and start adding a new habit below!
+                <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
+                  Here are your habits:
                 </p>
-              </div>
-            )
-          ) : (
-            <div>
-              <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
-                Here are your habits:
-              </p>
-              <ul className="flex flex-col gap-2 mt-2">
-                {habits.map((habit) => (
-                  <li className="flex items-center justify-between gap-10" key={habit.id}>
-                    <div className="flex items-center gap-3">
-                      <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
-                      <div onClick={() => {
-                          setEditingHabitId(habit.id)
-                          setEditingText(habit.name)
-                        }
-                      }>
-                        <input onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                              saveEdit(habit.id)
-                            }
-                          }}
-                        className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}/>
-                        <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
-                          {habit.name}
-                        </span>
+                <ul className="flex flex-col gap-2 mt-2">
+                  {habits.map((habit) => (
+                    <li className="flex items-center justify-between gap-10" key={habit.id}>
+                      <div className="flex items-center gap-3">
+                        <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
+                        <div onClick={() => {
+                            setEditingHabitId(habit.id)
+                            setEditingText(habit.name)
+                          }
+                        }>
+                          <input onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                saveEdit(habit.id)
+                              }
+                            }}
+                          className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}/>
+                          <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
+                            {habit.name}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+                      <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-          <br></br>
+            <br></br>
 
-          <p className="text-zinc-600">
-            You can add a new habit here:
-          </p>
-          <form onSubmit={handleSubmit}>
-            <input className="border-2 border-gray-400 rounded-md" type="text" value={habitName} onChange={(e) => setHabitName(e.target.value)}/>
-            <input type="submit" value="Add" className="ml-2"/>
-          </form>
+            <p className="text-zinc-600">
+              You can add a new habit here:
+            </p>
+            <form onSubmit={handleSubmit}>
+              <input className="border-2 border-gray-400 rounded-md" type="text" value={habitName} onChange={(e) => setHabitName(e.target.value)}/>
+              <input type="submit" value="Add" className="ml-2"/>
+            </form>
+          </div>
+          <HabitProgressChart habits={habits}/>
         </div>
       </main>
     </div>
