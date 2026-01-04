@@ -179,16 +179,19 @@ export default function Home() {
             )}
 
             <br></br>
-
-            <p className="text-zinc-600">
-              You can add a new habit here:
-            </p>
-            <form onSubmit={handleSubmit}>
-              <input className="border-2 border-gray-400 rounded-md" type="text" value={habitName} onChange={(e) => setHabitName(e.target.value)}/>
-              <input type="submit" value="Add" className="ml-2"/>
-            </form>
+            {user ? (
+              <div>
+                <p className="text-zinc-600">
+                  You can add a new habit here:
+                </p>
+                <form onSubmit={handleSubmit}>
+                  <input className="border-2 border-gray-400 rounded-md" type="text" value={habitName} onChange={(e) => setHabitName(e.target.value)}/>
+                  <input type="submit" value="Add" className="ml-2"/>
+                </form>
+              </div>
+            ) : null}
           </div>
-          <HabitProgressChart habits={habits}/>
+          {user ? <HabitProgressChart habits={habits}/> : null}
         </div>
       </main>
     </div>

@@ -18,6 +18,7 @@ export default function HabitProgressChart({ habits }: HabitProgressChartProps) 
     return (
         <div className="mr-80">
             <svg width={size} height={size}>
+                {/* Wrap in a group to start the segment from 12 o clock */}
                 <g transform={`rotate(-90 ${size / 2} ${size / 2})`}>
                     {/* Background circle */}
                     <circle
@@ -34,6 +35,7 @@ export default function HabitProgressChart({ habits }: HabitProgressChartProps) 
                         const gap = habits.length === 1 ? 0 : 4
                         const segmentLenght = (circumference / totalHabits) - gap
                         const offset = circumference - (index * (circumference / totalHabits))
+                        const noOfDoneHabits = habits.filter(h => h.done).length
 
                         return (
                             <circle
@@ -42,7 +44,7 @@ export default function HabitProgressChart({ habits }: HabitProgressChartProps) 
                                 cy={size / 2}
                                 r={radius}
                                 fill="none"
-                                stroke={habit.done ? "#8DB600" : "#a3a3a3"}
+                                stroke={index < noOfDoneHabits ? "#8DB600" : "#a3a3a3"}
                                 strokeWidth={strokeWidth}
                                 strokeDasharray={`${segmentLenght} ${circumference - segmentLenght}`}
                                 strokeDashoffset={offset}
