@@ -1,20 +1,20 @@
 import Image from "next/image"
 import { CircleUserRound } from "lucide-react"
 import { User } from "@supabase/supabase-js";
+import Link from 'next/link'
 
 type NavBarProps = {
     user: User | null;
-    onGetStarted: () => void;
     onSignOut: () => void;
 }
 
-export default function NavBar({ user, onGetStarted, onSignOut } : NavBarProps) {
+export default function NavBar({ user, onSignOut } : NavBarProps) {
 
     return (
         <nav className="flex items-center justify-between w-full">
             <Image
             src="/easehabit.svg"
-            alt="Next.js logo"
+            alt="Easehabit logo"
             width={200}
             height={40}
             priority
@@ -34,9 +34,18 @@ export default function NavBar({ user, onGetStarted, onSignOut } : NavBarProps) 
                         </button>
                     </div>
                 ) : (
-                    <button onClick={onGetStarted} className="px-4 py-2 bg-[#FF6B6B] rounded-md text-[15px] text-white font-medium hover:bg-[#CC4F4F] cursor-pointer">
-                        Get Started
-                    </button>
+                    <div className="flex items-center justify-between gap-3">
+                        <Link 
+                            href="/register"
+                            className="px-4 py-2 bg-[#FF6B6B] rounded-md text-[15px] text-white font-medium hover:bg-[#CC4F4F] cursor-pointer">
+                                Register
+                        </Link>
+
+                        <button className="px-4 py-2 border-2 border-[#FF6B6B] rounded-md text-[15px] text-[#FF6B6B] font-medium hover:bg-[#FF6B6B] hover:text-white cursor-pointer">
+                            Login
+                        </button>
+                    </div>
+
                 )}
             </div>
         </nav>

@@ -40,11 +40,11 @@ export default function Home() {
     getSession()
   }, [])
 
-  function handleGetStarted() {
-    supabase.auth.signInWithOAuth({
-      provider: 'google'
-    })
-  }
+  //function handleGetStarted() {
+    //supabase.auth.signInWithOAuth({
+      //provider: 'google'
+    //})
+  //}
   
   function handleSignOut() {
     supabase.auth.signOut()
@@ -124,8 +124,8 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-[#E6E8E6]">
-      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-26 py-22 px-35 bg-white dark:bg-[#E6E8E6] sm:items-start">
-        <NavBar user={user} onGetStarted={handleGetStarted} onSignOut={handleSignOut} />
+      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-26 px-35 py-22 bg-white dark:bg-[#E6E8E6] sm:items-start">
+        <NavBar user={user} onSignOut={handleSignOut} />
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
             <h1 className="max-w-xs text-3xl font-medium leading-10 mb-4 tracking-tight text-black dark:text-black">
@@ -141,7 +141,7 @@ export default function Home() {
               ) : (
                 <div>
                   <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
-                    You have no habits yet. Please press 'Get Started' and start adding a new habit below!
+                    You have no habits yet. Please press &apos;Get Started&apos; and start adding a new habit below!
                   </p>
                 </div>
               )
