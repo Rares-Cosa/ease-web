@@ -40,12 +40,6 @@ export default function Home() {
     getSession()
   }, [])
 
-  //function handleGetStarted() {
-    //supabase.auth.signInWithOAuth({
-      //provider: 'google'
-    //})
-  //}
-  
   function handleSignOut() {
     supabase.auth.signOut()
     setUser(null)

@@ -41,11 +41,12 @@ export default function NavBar({ user, onSignOut } : NavBarProps) {
                                 Register
                         </Link>
 
-                        <button className="px-4 py-2 border-2 border-[#FF6B6B] rounded-md text-[15px] text-[#FF6B6B] font-medium hover:bg-[#FF6B6B] hover:text-white cursor-pointer">
-                            Login
-                        </button>
+                        <Link 
+                            href="/login"
+                            className="px-4 py-2 border-2 border-[#FF6B6B] rounded-md text-[15px] text-[#FF6B6B] font-medium hover:bg-[#FF6B6B] hover:text-white cursor-pointer">
+                                Login
+                        </Link>
                     </div>
-
                 )}
             </div>
         </nav>
