@@ -30,14 +30,14 @@ export default function Home() {
       setUser(currentUser ?? null)
 
       if (currentUser) {
-        const { data, error } = await supabase // maybe here check because for some miliseconds the empty habits are displayed because the request is not done
+        const { data, error } = await supabase
           .from('habits')
           .select("*")
           .eq('user_id', currentUser.id)
 
         setHabits(data || [])
       }
-      setIsLoading(false)
+      setIsLoading(false) // Deactivate the loading state after the user and habits are retrieved
     }
     getSession()
   }, [])
