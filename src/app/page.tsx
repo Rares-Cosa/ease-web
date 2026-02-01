@@ -30,7 +30,7 @@ export default function Home() {
       setUser(currentUser ?? null)
 
       if (currentUser) {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from('habits')
           .select("*")
           .eq('user_id', currentUser.id)
@@ -42,7 +42,7 @@ export default function Home() {
     getSession()
   }, [])
 
-  async function handleSignOut() {
+  async function handleSignOut() { // TO DO: why not to move it to Navbar component?
     await supabase.auth.signOut()
     setUser(null)
     setHabits([])
@@ -51,7 +51,7 @@ export default function Home() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (habitName.trim() != "") {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('habits')
         .insert({ name: habitName, done: false, user_id: user?.id })
         .select()
