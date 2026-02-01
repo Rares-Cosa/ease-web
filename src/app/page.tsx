@@ -138,7 +138,7 @@ export default function Home() {
         <NavBar user={user} onSignOut={handleSignOut} />
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-            <h1 className="max-w-xs text-3xl font-medium leading-10 mb-4 tracking-tight text-black dark:text-black">
+            <h1 className="max-w-xs text-3xl font-medium leading-10 mb-10 tracking-tight text-black dark:text-black">
               Hello, {user ? user.user_metadata.full_name : "Guest"}!
             </h1>
             {habits.length === 0 ? (
@@ -160,22 +160,29 @@ export default function Home() {
                 <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
                   Here are your habits:
                 </p>
-                <ul className="flex flex-col gap-2 mt-2">
+                <ul className="flex flex-col gap-3 mt-5">
                   {habits.map((habit) => (
-                    <li className="flex items-center justify-between gap-10" key={habit.id}>
+                    <li className="flex items-center justify-between gap-20" key={habit.id}>
                       <div className="flex items-center gap-3">
                         <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
-                        <div onClick={() => {
+                        <div className="w-85" onClick={() => {
                             setEditingHabitId(habit.id)
                             setEditingText(habit.name)
                           }
                         }>
-                          <input onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
-                            if (e.key === "Enter") {
+                          <input 
+                            ref={(el) => {
+                              if (editingHabitId === habit.id && el) {
+                                el.focus()
+                              }
+                            }} 
+                            onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
+                              if (e.key === "Enter") {
                                 saveEdit(habit.id)
                               }
                             }}
-                          className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}/>
+                            className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}
+                          />
                           <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
                             {habit.name}
                           </span>
@@ -190,13 +197,13 @@ export default function Home() {
 
             <br></br>
             {user ? (
-              <div>
+              <div className="flex flex-col gap-5">
                 <p className="text-zinc-600">
                   You can add a new habit here:
                 </p>
                 <form onSubmit={handleSubmit}>
                   <input className="border-2 border-gray-400 rounded-md" type="text" value={habitName} onChange={(e) => setHabitName(e.target.value)}/>
-                  <input type="submit" value="Add" className="ml-2"/>
+                  <input type="submit" value="Add" className="ml-6"/>
                 </form>
               </div>
             ) : null}
