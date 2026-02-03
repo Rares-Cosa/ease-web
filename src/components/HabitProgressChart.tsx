@@ -10,7 +10,7 @@ export default function HabitProgressChart({ habits }: HabitProgressChartProps) 
     const totalHabits = habits.length
     const completedHabits = habits.filter((h) => h.done).length
 
-    const size = 200
+    const size = 250
     const strokeWidth = 15 // thickness of the ring
     const radius = (size - strokeWidth) / 2
     const circumference = 2 * Math.PI * radius 

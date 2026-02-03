@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { Trash2 } from "lucide-react"
+import { Trash2, Calendar } from "lucide-react"
 import NavBar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase"
 import { User } from "@supabase/supabase-js"
@@ -137,10 +137,21 @@ export default function Home() {
       <main className="flex min-h-screen w-full flex-col items-center justify-start gap-26 px-35 py-10 bg-white dark:bg-[#E6E8E6] sm:items-start">
         <NavBar user={user} onSignOut={handleSignOut} />
         <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-            <h1 className="max-w-xs text-3xl font-medium leading-10 mb-10 tracking-tight text-black dark:text-black">
+          <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+            <h1 className="max-w-xs text-3xl font-medium leading-10 mb-1 tracking-tight text-black dark:text-black">
               Hello, {user ? user.user_metadata.full_name : "Guest"}!
             </h1>
+            <div className="flex items-center justify-between gap-3 text-xl text-black mb-13 font-medium">
+              <Calendar size={20} />
+              {
+                new Date().toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                }).replace(/,([^,]*)$/, '$1') // regex to remove the comma between day and year
+              }
+            </div>
             {habits.length === 0 ? (
               user ? (
                 <div>
@@ -151,47 +162,50 @@ export default function Home() {
               ) : (
                 <div>
                   <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
-                    You have no habits yet. Please press &apos;Get Started&apos; and start adding a new habit below!
+                    You have no habits yet. Please press &apos;Register&apos; or &apos;Login&apos;, and start adding a new habit!
                   </p>
                 </div>
               )
             ) : (
               <div>
-                <p className="max-w-md text-lg leading-8 text-zinc-600 dark:black">
+                <p className="max-w-md text-lg leading-8 mb-5 text-zinc-600 dark:black">
                   Here are your habits:
                 </p>
-                <ul className="flex flex-col gap-3 mt-5">
-                  {habits.map((habit) => (
-                    <li className="flex items-center justify-between gap-20" key={habit.id}>
-                      <div className="flex items-center gap-3">
-                        <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
-                        <div className="w-85" onClick={() => {
-                            setEditingHabitId(habit.id)
-                            setEditingText(habit.name)
-                          }
-                        }>
-                          <input 
-                            ref={(el) => {
-                              if (editingHabitId === habit.id && el) {
-                                el.focus()
-                              }
-                            }} 
-                            onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                saveEdit(habit.id)
-                              }
-                            }}
-                            className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}
-                          />
-                          <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
-                            {habit.name}
-                          </span>
+                <div className="flex items-center justify-between w-full gap-55">
+                  <ul className="flex flex-col gap-3 h-[200px] overflow-y-scroll pr-6">
+                    {habits.map((habit) => (
+                      <li className="flex items-center justify-between gap-20" key={habit.id}>
+                        <div className="flex items-center gap-3">
+                          <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
+                          <div className="w-85" onClick={() => {
+                              setEditingHabitId(habit.id)
+                              setEditingText(habit.name)
+                            }
+                          }>
+                            <input 
+                              ref={(el) => {
+                                if (editingHabitId === habit.id && el) {
+                                  el.focus()
+                                }
+                              }} 
+                              onBlur={() => saveEdit(habit.id)} onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  saveEdit(habit.id)
+                                }
+                              }}
+                              className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}
+                            />
+                            <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
+                              {habit.name}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
-                    </li>
-                  ))}
-                </ul>
+                        <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
+                      </li>
+                    ))}
+                  </ul>
+                  {user ? <HabitProgressChart habits={habits}/> : null}
+                </div>
               </div>
             )}
 
@@ -208,7 +222,6 @@ export default function Home() {
               </div>
             ) : null}
           </div>
-          {user ? <HabitProgressChart habits={habits}/> : null}
         </div>
       </main>
     </div>
