@@ -134,14 +134,14 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-[#E6E8E6]">
-      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-26 px-35 py-10 bg-white dark:bg-[#E6E8E6] sm:items-start">
+      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-20 px-35 py-10 bg-white dark:bg-[#E6E8E6] sm:items-start">
         <NavBar user={user} onSignOut={handleSignOut} />
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
             <h1 className="max-w-xs text-3xl font-medium leading-10 mb-1 tracking-tight text-black dark:text-black">
               Hello, {user ? user.user_metadata.full_name : "Guest"}!
             </h1>
-            <div className="flex items-center justify-between gap-3 text-xl text-black mb-13 font-medium">
+            <div className="flex items-center justify-between gap-3 text-xl text-black mb-10 font-medium">
               <Calendar size={20} />
               {
                 new Date().toLocaleDateString('en-US', {
@@ -171,13 +171,17 @@ export default function Home() {
                 <p className="max-w-md text-lg leading-8 mb-5 text-zinc-600 dark:black">
                   Here are your habits:
                 </p>
-                <div className="flex items-center justify-between w-full gap-55">
-                  <ul className="flex flex-col gap-3 h-[200px] overflow-y-scroll pr-6">
+                <div className="flex items-center justify-between w-full gap-47">
+                  <ul className="flex flex-col gap-3 h-80 overflow-y-scroll pr-6">
                     {habits.map((habit) => (
-                      <li className="flex items-center justify-between gap-20" key={habit.id}>
-                        <div className="flex items-center gap-3">
-                          <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-4 h-4 rounded-full border-2 ${habit.done ? "border-[#8DB600] bg-[#8DB600]" : "border-current"}`} />
-                          <div className="w-85" onClick={() => {
+                      <li className="flex items-center justify-between gap-20 bg-gray-100 rounded-lg px-4 py-3 shadow-sm hover:bg-gray-200 transition-colors" key={habit.id}>
+                        <div className="flex items-center gap-5 text-lg">
+                          <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-5 h-5 rounded-full border-2 cursor-pointer transition-colors ${
+                            habit.done 
+                              ? "border-[#8DB600] bg-[#8DB600] hover:border-[#7A9E00] hover:bg-[#7A9E00]" 
+                              : "border-current hover:border-[#8DB600]"}`
+                          } />
+                          <div className="w-85 cursor-text" onClick={() => {
                               setEditingHabitId(habit.id)
                               setEditingText(habit.name)
                             }
@@ -193,14 +197,14 @@ export default function Home() {
                                   saveEdit(habit.id)
                                 }
                               }}
-                              className={`${editingHabitId === habit.id ? "" : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}
+                              className={`${editingHabitId === habit.id ? `${habit.done ? "text-[#8DB600]" : "text-[#c7b0b0]"}` : "hidden"}`} type="text" value={editingText} onChange={(e) => setEditingText(e.target.value)}
                             />
-                            <span className={`${habit.done ? "text-[#8DB600]" : "text-current"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
+                            <span className={`transition-colors ${habit.done ? "text-[#8DB600] hover:text-[#7A9E00]" : "text-[#c7b0b0] hover:text-[#a89090]"} ${editingHabitId === habit.id ? "hidden" : ""}`}>
                               {habit.name}
                             </span>
                           </div>
                         </div>
-                        <Trash2 size={20} color="#FAA0A0" onClick={() => deleteHabit(habit.id)}/>
+                        <Trash2 size={23} onClick={() => deleteHabit(habit.id)} className="cursor-pointer text-[#FAA0A0] hover:text-[#FF6B6B]"/>
                       </li>
                     ))}
                   </ul>
@@ -211,15 +215,21 @@ export default function Home() {
 
             <br></br>
             {user ? (
-              <div className="flex flex-col gap-5">
-                <p className="text-zinc-600">
-                  You can add a new habit here:
-                </p>
-                <form onSubmit={handleSubmit}>
-                  <input className="border-2 border-gray-400 rounded-md" type="text" value={habitName} onChange={(e) => setHabitName(e.target.value)}/>
-                  <input type="submit" value="Add" className="ml-6"/>
-                </form>
-              </div>
+              <form onSubmit={handleSubmit} className="flex gap-4">
+                <input 
+                  className="border-2 border-gray-400 rounded-md px-3 py-2" 
+                  type="text" 
+                  placeholder="Enter a new habit..."
+                  value={habitName} 
+                  onChange={(e) => setHabitName(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#FF6B6B] rounded-md text-white font-medium hover:bg-[#CC4F4F]"
+                >
+                  Add
+                </button>
+              </form>
             ) : null}
           </div>
         </div>

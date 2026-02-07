@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: lab(73.76% 8.26 3.02);
+  --foreground: #c7b0b0;
 }
 
 @theme inline {
