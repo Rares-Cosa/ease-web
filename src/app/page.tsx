@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Calendar } from "lucide-react"
 import { supabase } from "@/lib/supabase"
 import { User } from "@supabase/supabase-js"
-import { Habit } from "@/types/habit";
+import { Habit, HabitCategory } from "@/types/habit";
 import NavBar from "@/components/Navbar";
 import HabitProgressChart from "@/components/HabitProgressChart";
 import HabitCard from "@/components/HabitCard";
@@ -19,6 +19,7 @@ export default function Home() {
   const [editingText, setEditingText] = useState("")
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [categoryChangeHabitId, setCategoryChangeHabitId] = useState<string | null>(null)
 
   useEffect(() => {
     async function getSession() {
@@ -115,6 +116,21 @@ export default function Home() {
     setEditingHabitId(null)
   }
 
+  function updateHabitCategory(id: string, category: HabitCategory) {
+    const currentHabit = habits.find((h) => h.id === id)
+
+    if (!currentHabit) return
+
+    setHabits(habits.map((h) => {
+      if (h.id === id){
+        return { ...h, category: category}
+      }
+      return h
+    }))
+
+    setCategoryChangeHabitId(null) // Close dropdown after selecting the category
+  }
+
   if (isLoading) {
     return <LoadingSpinner />
   }
@@ -159,7 +175,7 @@ export default function Home() {
                   Here are your habits:
                 </p>
                 <div className="flex items-center justify-between w-full gap-47">
-                  <ul className="flex flex-col gap-3 h-80 overflow-y-scroll pr-6">
+                  <ul className="flex flex-col gap-4 h-80 overflow-y-scroll pr-6">
                     {habits.map((habit) => (
                       <HabitCard
                         key={habit.id}
@@ -171,6 +187,9 @@ export default function Home() {
                         toggleHabit={toggleHabit}
                         deleteHabit={deleteHabit}
                         saveEdit={saveEdit}
+                        categoryChangeHabitId={categoryChangeHabitId}
+                        setCategoryChangeHabitId={setCategoryChangeHabitId}
+                        updateHabitCategory={updateHabitCategory}
                       />
                     ))}
                   </ul>
