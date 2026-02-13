@@ -116,17 +116,24 @@ export default function Home() {
     setEditingHabitId(null)
   }
 
-  function updateHabitCategory(id: string, category: HabitCategory) {
+  async function updateHabitCategory(id: string, category: HabitCategory) {
     const currentHabit = habits.find((h) => h.id === id)
 
     if (!currentHabit) return
 
-    setHabits(habits.map((h) => {
-      if (h.id === id){
-        return { ...h, category: category}
-      }
-      return h
-    }))
+    const { error } = await supabase
+      .from('habits')
+      .update({ category: category })
+      .eq('id', id)
+
+    if (!error) {
+      setHabits(habits.map((h) => {
+        if (h.id === id){
+          return { ...h, category: category}
+        }
+        return h
+      }))
+    }
 
     setCategoryChangeHabitId(null) // Close dropdown after selecting the category
   }
