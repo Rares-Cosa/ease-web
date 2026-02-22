@@ -45,7 +45,7 @@ export default function HabitCard({
 
 
     return (
-        <div className="flex flex-col items-end gap-1">
+        <div className="flex flex-col items-end gap-1 transition-all duration-300">
             <li className={`flex items-center justify-between gap-10 ${bgColor} ${hoverColor} rounded-lg px-4 py-3 shadow-sm transition-colors w-full`} key={habit.id}>
                 <div className="flex items-center gap-5 text-lg">
                     <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-5 h-5 rounded-full border-2 cursor-pointer transition-colors ${

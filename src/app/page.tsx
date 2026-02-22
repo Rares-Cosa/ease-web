@@ -10,6 +10,7 @@ import HabitProgressChart from "@/components/HabitProgressChart";
 import HabitCard from "@/components/HabitCard";
 import AddHabitForm from "@/components/AddHabitForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
 
@@ -182,23 +183,34 @@ export default function Home() {
                   Here are your habits:
                 </p>
                 <div className="flex items-center justify-between w-full gap-47">
-                  <ul className="flex flex-col gap-4 h-80 overflow-y-scroll pr-6">
-                    {habits.map((habit) => (
-                      <HabitCard
-                        key={habit.id}
-                        habit={habit}
-                        editingHabitId={editingHabitId}
-                        editingText={editingText}
-                        setEditingHabitId={setEditingHabitId}
-                        setEditingText={setEditingText}
-                        toggleHabit={toggleHabit}
-                        deleteHabit={deleteHabit}
-                        saveEdit={saveEdit}
-                        categoryChangeHabitId={categoryChangeHabitId}
-                        setCategoryChangeHabitId={setCategoryChangeHabitId}
-                        updateHabitCategory={updateHabitCategory}
-                      />
-                    ))}
+                  <ul className="flex flex-col gap-4 h-80 overflow-y-scroll pr-6" style={{ overflowAnchor: 'none' }}>
+                    <AnimatePresence>
+                      {[...habits].sort((a, b) => Number(b.done) - Number(a.done)).map((habit) => (
+                        <motion.div
+                          key={habit.id}
+                          layout
+                          initial={{ opacity: 0, y: -20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 20 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <HabitCard
+                            key={habit.id}
+                            habit={habit}
+                            editingHabitId={editingHabitId}
+                            editingText={editingText}
+                            setEditingHabitId={setEditingHabitId}
+                            setEditingText={setEditingText}
+                            toggleHabit={toggleHabit}
+                            deleteHabit={deleteHabit}
+                            saveEdit={saveEdit}
+                            categoryChangeHabitId={categoryChangeHabitId}
+                            setCategoryChangeHabitId={setCategoryChangeHabitId}
+                            updateHabitCategory={updateHabitCategory}
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
                   </ul>
                   {user ? <HabitProgressChart habits={habits}/> : null}
                 </div>
