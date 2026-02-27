@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase"
 import { User } from "@supabase/supabase-js"
 import { Habit, HabitCategory } from "@/types/habit";
 import NavBar from "@/components/Navbar";
-import HabitProgressChart from "@/components/HabitProgressChart";
+import HabitProgressBar from "@/components/HabitProgressBar";
 import HabitCard from "@/components/HabitCard";
 import AddHabitForm from "@/components/AddHabitForm";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -145,14 +145,14 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-[#E6E8E6]">
-      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-20 px-35 py-10 bg-white dark:bg-[#E6E8E6] sm:items-start">
+      <main className="flex min-h-screen w-full flex-col items-center justify-start gap-10 px-35 py-10 bg-white dark:bg-[#E6E8E6]">
         <NavBar user={user} onSignOut={handleSignOut} />
-        <div className="flex items-center justify-between w-full">
-          <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+        <div className="flex items-center justify-center w-full">
+          <div className="flex flex-col items-center text-center gap-3">
             <h1 className="max-w-xs text-3xl font-medium leading-10 mb-1 tracking-tight text-black dark:text-black">
               Hello, {user ? user.user_metadata.full_name : "Guest"}!
             </h1>
-            <div className="flex items-center justify-between gap-3 text-xl text-black mb-10 font-medium">
+            <div className="flex items-center justify-center gap-3 text-xl text-black mb-7 font-medium">
               <Calendar size={20} />
               {
                 new Date().toLocaleDateString('en-US', {
@@ -179,11 +179,12 @@ export default function Home() {
               )
             ) : (
               <div>
-                <p className="max-w-md text-lg leading-8 mb-5 text-zinc-600 dark:black">
+                <p className="text-lg leading-8 mb-5 text-zinc-600 dark:black">
                   Here are your habits:
                 </p>
-                <div className="flex items-center justify-between w-full gap-47">
-                  <ul className="flex flex-col gap-4 h-80 overflow-y-scroll pr-6" style={{ overflowAnchor: 'none' }}>
+                <div className="flex flex-col items-center w-full max-w-xl">
+                  {user ? <HabitProgressBar habits={habits}/> : null}
+                  <ul className="flex flex-col gap-4 h-80 overflow-y-auto mt-4 w-[500px]" style={{ overflowAnchor: 'none' }}>
                     <AnimatePresence>
                       {[...habits].sort((a, b) => Number(b.done) - Number(a.done)).map((habit) => (
                         <motion.div
@@ -212,12 +213,11 @@ export default function Home() {
                       ))}
                     </AnimatePresence>
                   </ul>
-                  {user ? <HabitProgressChart habits={habits}/> : null}
                 </div>
               </div>
             )}
 
-            <br></br>
+            
             {user ? (
               <AddHabitForm 
                 habitName={habitName}

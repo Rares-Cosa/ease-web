@@ -10,7 +10,7 @@ export default function AddHabitForm({
     handleSubmit
 }: AddHabitFormProps) {
     return (
-        <form onSubmit={handleSubmit} className="flex gap-4">
+        <form onSubmit={handleSubmit} className="flex gap-4 mt-6">
             <input 
                 className="border-2 border-gray-400 rounded-md px-3 py-2" 
                 type="text" 

@@ -46,14 +46,14 @@ export default function HabitCard({
 
     return (
         <div className="flex flex-col items-end gap-1 transition-all duration-300">
-            <li className={`flex items-center justify-between gap-10 ${bgColor} ${hoverColor} rounded-lg px-4 py-3 shadow-sm transition-colors w-full`} key={habit.id}>
+            <li className={`flex items-center justify-between gap-6 ${bgColor} ${hoverColor} rounded-lg px-4 py-3 shadow-sm transition-colors w-full text-left`} key={habit.id}>
                 <div className="flex items-center gap-5 text-lg">
                     <span onClick={() => toggleHabit(habit.id)} className={`inline-block w-5 h-5 rounded-full border-2 cursor-pointer transition-colors ${
                                 habit.done 
                                 ? "border-[#8DB600] bg-[#8DB600] hover:border-[#7A9E00] hover:bg-[#7A9E00]" 
                                 : "border-current hover:border-[#8DB600]"}`
                     } />
-                    <div className="w-85 cursor-text" onClick={() => {
+                    <div className="w-70 cursor-text" onClick={() => {
                                 setEditingHabitId(habit.id)
                                 setEditingText(habit.name)
                                 }
@@ -85,7 +85,7 @@ export default function HabitCard({
                     {isDropDownOpen ? <ChevronDown size={25} /> : <ChevronLeft size={25}/>}
                 </div>
 
-                <Trash2 size={23} onClick={() => deleteHabit(habit.id)} className="cursor-pointer text-[#FAA0A0] hover:text-[#FF6B6B]"/>
+                <Trash2 size={23} onClick={() => deleteHabit(habit.id)} className="cursor-pointer text-[#FAA0A0] hover:text-[#FF6B6B] mr-2"/>
             </li>
 
             {/* Category Dropdown */}
