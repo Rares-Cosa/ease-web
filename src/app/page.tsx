@@ -34,6 +34,11 @@ export default function Home() {
     return formatDate(date) === formatDate(today)
   }
 
+  // Get which table should be modified
+  function getTableName(): string {
+    return isToday(selectedDay) ? 'habits' : 'habits_history'
+  }
+
   async function handleDayChange(currentUser: User) {
     const today = formatDate(new Date())
     const storageKey = `lastActiveDate_${currentUser.id}` // Per user-key
@@ -175,14 +180,15 @@ export default function Home() {
 
   async function toggleHabit(id: string) {
     const currentHabit = habits.find((h) => h.id === id)
+    const tableName = getTableName()
 
     if (!currentHabit) return
-
+    
     const { error } = await supabase
-      .from('habits')
+      .from(tableName)
       .update({ done: !currentHabit.done })
       .eq('id', id)
-
+    
     if (!error) {
       setHabits(habits.map((h) => {
         if (h.id === id) {
@@ -194,8 +200,10 @@ export default function Home() {
   }
 
   async function deleteHabit(id: string) {
+    const tableName = getTableName()
+
     const { error } = await supabase
-      .from('habits')
+      .from(tableName)
       .delete()
       .eq('id', id)
 
@@ -206,14 +214,17 @@ export default function Home() {
   }
 
   async function saveEdit(id: string) {
+    const tableName = getTableName()
+    const columnName = isToday(selectedDay) ? 'name' : 'habit_name'
+
     if (editingText.trim() === "") { // Handle case when the input is empty, therefore the empty habit name will not be saved
       setEditingHabitId(null)
       return
     }
 
     const { error } = await supabase
-      .from('habits')
-      .update({ name: editingText })
+      .from(tableName)
+      .update({ [columnName]: editingText }) // use "[ ]" to retrieve the value inside columnName, created a dynamic key
       .eq('id', id)
 
     if (!error) {
@@ -230,12 +241,14 @@ export default function Home() {
 
   async function updateHabitCategory(id: string, category: HabitCategory) {
     const currentHabit = habits.find((h) => h.id === id)
+    const tableName = getTableName()
+    const columnName = isToday(selectedDay) ? 'category' : 'habit_category'
 
     if (!currentHabit) return
 
     const { error } = await supabase
-      .from('habits')
-      .update({ category: category })
+      .from(tableName)
+      .update({ [columnName]: category })
       .eq('id', id)
 
     if (!error) {
@@ -322,11 +335,16 @@ export default function Home() {
             </div>
             {habits.length === 0 ? (
               user ? (
-                <div>
-                  <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
-                    You have no habits yet. Start adding a new habit below!
-                  </p>
-                </div>
+                (isToday(selectedDay) ? (
+                    <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
+                      You have no habits yet. Start adding a new habit below!
+                    </p>
+                  ) : (
+                    <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
+                      You have no habits for this day.
+                    </p>
+                  )
+                )
               ) : (
                 <div>
                   <p className="max-w-md text-md leading-8 text-zinc-600 mt-10">
@@ -374,7 +392,7 @@ export default function Home() {
               </div>
             )}
 
-            {user ? (
+            {user && isToday(selectedDay) ? (
               <AddHabitForm 
                 habitName={habitName}
                 setHabitName={setHabitName}
